@@ -4,93 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
-    <styles>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
 
-.input-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .input-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.input-container input {
-    margin-right: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+        .input-container input {
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-.input-container button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        .input-container button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-.input-container button:hover {
-    background-color: #0056b3;
-}
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
 
-.chat-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-.chat {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
+        .chat {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
 
-.profile-pic {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
 
-.chat-info {
-    flex-grow: 1;
-}
+        .chat-info {
+            flex-grow: 1;
+        }
 
-.chat-name {
-    margin: 0;
-    font-size: 16px;
-    font-weight: bold;
-}
+        .chat-name {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-.chat-status {
-    margin: 0;
-    color: #28a745; /* Color verde para indicar que está en línea */
-}
+        .chat-status {
+            margin: 0;
+            color: #28a745; /* Color verde para indicar que está en línea */
+        }
 
-.chat-time {
-    font-size: 12px;
-    color: #999;
-}
-
-    </styles>
+        .chat-time {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
 </head>
 <body>
     <div class="input-container">
@@ -101,6 +100,54 @@ body {
     <div class="chat-container" id="chatContainer">
         <!-- Los chats se agregarán aquí -->
     </div>
-    <script src="script.js"></script>
+    <script>
+        function addChat() {
+            const profilePicInput = document.getElementById('profilePicInput');
+            const nameInput = document.getElementById('nameInput');
+            const chatContainer = document.getElementById('chatContainer');
+
+            if (profilePicInput.files && profilePicInput.files[0] && nameInput.value) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const chat = document.createElement('div');
+                    chat.className = 'chat';
+                    chat.onclick = function() {
+                        window.location.href = 'chat.html?name=' + encodeURIComponent(nameInput.value);
+                    };
+
+                    const profilePic = document.createElement('img');
+                    profilePic.src = e.target.result;
+                    profilePic.alt = 'Profile Picture';
+                    profilePic.className = 'profile-pic';
+
+                    const chatInfo = document.createElement('div');
+                    chatInfo.className = 'chat-info';
+
+                    const chatName = document.createElement('h4');
+                    chatName.className = 'chat-name';
+                    chatName.textContent = nameInput.value;
+
+                    const chatStatus = document.createElement('p');
+                    chatStatus.className = 'chat-status';
+                    chatStatus.textContent = 'En línea';
+
+                    const chatTime = document.createElement('span');
+                    chatTime.className = 'chat-time';
+                    chatTime.textContent = new Date().toLocaleTimeString();
+
+                    chatInfo.appendChild(chatName);
+                    chatInfo.appendChild(chatStatus);
+                    chat.appendChild(profilePic);
+                    chat.appendChild(chatInfo);
+                    chat.appendChild(chatTime);
+
+                    chatContainer.appendChild(chat);
+                };
+                reader.readAsDataURL(profilePicInput.files[0]);
+            } else {
+                alert('Por favor, selecciona una foto de perfil y escribe un nombre.');
+            }
+        }
+    </script>
 </body>
 </html>
